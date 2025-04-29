@@ -36,9 +36,8 @@ class Candidate {
 public:
     string id;
     string name;
-    int votes;
 
-    Candidate(string _id = "", string _name = "") : id(_id), name(_name), votes(0) {}
+    Candidate(string _id = "", string _name = "") : id(_id), name(_name) {}
 };
 
 class PollSystem {
@@ -63,7 +62,7 @@ private:
     void saveCandidatesToFile() {
         ofstream out("candidates.csv");
         for (auto &c : candidates) {
-            out << c.second.id << "," << c.second.name << "," << c.second.votes << "\n";
+            out << c.second.id << "," << c.second.name << "\n";
         }
     }
 
@@ -90,10 +89,10 @@ private:
         string line;
         while (getline(in, line)) {
             stringstream ss(line);
-            string id, name, votesStr;
-            getline(ss, id, ','); getline(ss, name, ','); getline(ss, votesStr);
+            string id, name;
+            getline(ss, id, ','); 
+            getline(ss, name);
             candidates[id] = Candidate(id, name);
-            candidates[id].votes = stoi(votesStr);
         }
     }
 
@@ -216,10 +215,8 @@ public:
             return;
         }
 
-        candidates[cid].votes++;
         voters[id].hasVoted = true;
         saveVotersToFile();
-        saveCandidatesToFile();
         logVote(id, cid);
         cout << "Vote cast successfully.\n";
     }
@@ -230,10 +227,38 @@ public:
             return;
         }
 
-        cout << "Results:\n";
-        for (auto &c : candidates) {
-            cout << c.second.name << ": " << c.second.votes << " votes\n";
+        unordered_map<string, int> voteCount;
+        ifstream log("votes.log");
+        string line;
+        
+        // Initialize vote count for all candidates
+        for (const auto &c : candidates) {
+            voteCount[c.first] = 0;
         }
+
+        // Count votes from log file
+        while (getline(log, line)) {
+            stringstream ss(line);
+            string voterId, candidateId, timestamp;
+            getline(ss, voterId, ',');
+            getline(ss, candidateId, ',');
+            voteCount[candidateId]++;
+        }
+
+        // Display and save results
+        cout << "Results:\n";
+        ofstream resultFile("result.txt");
+        resultFile << "Election Results\n";
+        resultFile << "================\n\n";
+        
+        for (const auto &c : candidates) {
+            string result = c.second.name + ": " + to_string(voteCount[c.first]) + " votes\n";
+            cout << result;
+            resultFile << result;
+        }
+        
+        resultFile.close();
+        cout << "\nResults have been exported to result.txt\n";
     }
 };
 
