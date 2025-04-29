@@ -45,8 +45,7 @@ To build and run eVote, ensure the following prerequisites are met:
     ```bash
     ./build/evote
     ```
-
-3. Follow the on-screen instructions to set up and start the voting process.
+ Follow the on-screen instructions to set up and start the voting process.
 
 ## How to Rebuild the Project
 
