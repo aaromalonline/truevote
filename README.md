@@ -1,6 +1,8 @@
-# eVote
+# TrueVote / EVote : Digital Voting System
 
 eVote is a secure and efficient electronic voting system designed to ensure transparency and integrity in the voting process. It leverages modern cryptographic techniques to protect voter privacy and prevent tampering.
+
+[See our presentation ↗️](https://www.canva.com/design/DAGmAXYr0aM/lYysgOLE0z9kdSsaf3eBKQ/view?utm_content=DAGmAXYr0aM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h3586e21761)
 
 ## Features
 - Secure and anonymous voting.
@@ -39,14 +41,9 @@ To build and run eVote, ensure the following prerequisites are met:
 
 ## How to Run the Built Executable
 
-1. Navigate to the directory containing the built executable:
+ Run the executable:
     ```bash
-    cd ./build
-    ```
-
-2. Run the executable:
-    ```bash
-    ./evote
+    ./build/evote
     ```
 
 3. Follow the on-screen instructions to set up and start the voting process.
