@@ -27,9 +27,9 @@ public:
     string id;
     string name;
     string passwordHash;
-    bool hasVoted;
 
-    Voter(string _id = "", string _name = "", string _pass = "") : id(_id), name(_name), passwordHash(sha256(_pass)), hasVoted(false) {}
+    Voter(string _id = "", string _name = "", string _pass = "") 
+        : id(_id), name(_name), passwordHash(sha256(_pass)) {}
 };
 
 class Candidate {
@@ -52,10 +52,24 @@ private:
         return user == adminUser && pass == adminPass;
     }
 
+    bool hasVoted(const string &voterId) {
+        ifstream log("votes.log");
+        string line;
+        while (getline(log, line)) {
+            stringstream ss(line);
+            string vid, cid, timestamp;
+            getline(ss, vid, ',');
+            if (vid == voterId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     void saveVotersToFile() {
         ofstream out("voters.csv");
         for (auto &v : voters) {
-            out << v.second.id << "," << v.second.name << "," << v.second.passwordHash << "," << v.second.hasVoted << "\n";
+            out << v.second.id << "," << v.second.name << "," << v.second.passwordHash << "\n";
         }
     }
 
@@ -77,9 +91,12 @@ private:
         string line;
         while (getline(in, line)) {
             stringstream ss(line);
-            string id, name, passHash, votedStr;
-            getline(ss, id, ','); getline(ss, name, ','); getline(ss, passHash, ','); getline(ss, votedStr);
-            Voter v(id, name); v.passwordHash = passHash; v.hasVoted = votedStr == "1";
+            string id, name, passHash;
+            getline(ss, id, ',');
+            getline(ss, name, ',');
+            getline(ss, passHash);
+            Voter v(id, name);
+            v.passwordHash = passHash;
             voters[id] = v;
         }
     }
@@ -94,6 +111,12 @@ private:
             getline(ss, name);
             candidates[id] = Candidate(id, name);
         }
+    }
+
+    void clearLogs() {
+        ofstream log("votes.log", ios::trunc);
+        log.close();
+        cout << "Logs cleared successfully.\n";
     }
 
 public:
@@ -117,7 +140,9 @@ public:
         int choice;
         do {
             cout << "\nAdmin Panel:\n";
-            cout << "1. Register Voter\n2. Register Candidate\n3. Start Poll\n4. Close Poll\n5. View Results\n0. Logout\nChoice: ";
+            cout << "1. Register Voter\n2. Register Candidate\n"
+                 << "3. Start Poll\n4. Close Poll\n5. View Results\n"
+                 << "6. Clear Logs\n0. Logout\nChoice: ";
             cin >> choice;
             switch (choice) {
                 case 1: registerVoter(); break;
@@ -125,6 +150,7 @@ public:
                 case 3: startPoll(); break;
                 case 4: closePoll(); break;
                 case 5: viewResults(); break;
+                case 6: clearLogs(); break;
                 case 0: cout << "Logging out...\n"; break;
                 default: cout << "Invalid choice.\n";
             }
@@ -194,7 +220,7 @@ public:
                 continue;
             }
 
-            if (voters[id].hasVoted) {
+            if (hasVoted(id)) {
                 cout << "You have already voted.\n";
                 return;
             }
@@ -215,8 +241,6 @@ public:
             return;
         }
 
-        voters[id].hasVoted = true;
-        saveVotersToFile();
         logVote(id, cid);
         cout << "Vote cast successfully.\n";
     }
