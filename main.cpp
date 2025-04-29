@@ -10,6 +10,8 @@
 #include <ctime>
 #include <iomanip>
 #include <openssl/sha.h>
+#include <sys/stat.h>   // for mkdir
+#include <errno.h>      // for errno
 
 using namespace std;
 
@@ -47,13 +49,14 @@ private:
     bool pollOpen = false;
     const string adminUser = "admin";
     const string adminPass = "admin123";
+    const string DATA_DIR = "./data/";
 
     bool validateAdmin(const string &user, const string &pass) {
         return user == adminUser && pass == adminPass;
     }
 
     bool hasVoted(const string &voterId) {
-        ifstream log("votes.log");
+        ifstream log(DATA_DIR + "votes.log");
         string line;
         while (getline(log, line)) {
             stringstream ss(line);
@@ -67,27 +70,27 @@ private:
     }
 
     void saveVotersToFile() {
-        ofstream out("voters.csv");
+        ofstream out(DATA_DIR + "voters.csv");
         for (auto &v : voters) {
             out << v.second.id << "," << v.second.name << "," << v.second.passwordHash << "\n";
         }
     }
 
     void saveCandidatesToFile() {
-        ofstream out("candidates.csv");
+        ofstream out(DATA_DIR + "candidates.csv");
         for (auto &c : candidates) {
             out << c.second.id << "," << c.second.name << "\n";
         }
     }
 
     void logVote(const string &voterId, const string &candidateId) {
-        ofstream log("votes.log", ios::app);
+        ofstream log(DATA_DIR + "votes.log", ios::app);
         time_t now = time(0);
         log << voterId << "," << candidateId << "," << put_time(localtime(&now), "%F %T") << "\n";
     }
 
     void loadVoters() {
-        ifstream in("voters.csv");
+        ifstream in(DATA_DIR + "voters.csv");
         string line;
         while (getline(in, line)) {
             stringstream ss(line);
@@ -102,7 +105,7 @@ private:
     }
 
     void loadCandidates() {
-        ifstream in("candidates.csv");
+        ifstream in(DATA_DIR + "candidates.csv");
         string line;
         while (getline(in, line)) {
             stringstream ss(line);
@@ -114,13 +117,33 @@ private:
     }
 
     void clearLogs() {
-        ofstream log("votes.log", ios::trunc);
+        // Clear votes.log
+        ofstream log(DATA_DIR + "votes.log", ios::trunc);
         log.close();
+
+        // Remove result.txt if it exists
+        string resultFile = DATA_DIR + "result.txt";
+        if (remove(resultFile.c_str()) == 0) {
+            cout << "Previous results file removed.\n";
+        }
+        
         cout << "Logs cleared successfully.\n";
+    }
+
+    void createDataDirectory() {
+        struct stat st = {0};
+        if (stat(DATA_DIR.c_str(), &st) == -1) {
+            #ifdef _WIN32
+                _mkdir(DATA_DIR.c_str());
+            #else
+                mkdir(DATA_DIR.c_str(), 0700);
+            #endif
+        }
     }
 
 public:
     PollSystem() {
+        createDataDirectory();
         loadVoters();
         loadCandidates();
     }
@@ -252,7 +275,7 @@ public:
         }
 
         unordered_map<string, int> voteCount;
-        ifstream log("votes.log");
+        ifstream log(DATA_DIR + "votes.log");
         string line;
         
         // Initialize vote count for all candidates
@@ -271,7 +294,7 @@ public:
 
         // Display and save results
         cout << "Results:\n";
-        ofstream resultFile("result.txt");
+        ofstream resultFile(DATA_DIR + "result.txt");
         resultFile << "Election Results\n";
         resultFile << "================\n\n";
         
