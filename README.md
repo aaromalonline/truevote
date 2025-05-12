@@ -2,7 +2,8 @@
 
 eVote is a secure and efficient electronic voting system designed to ensure transparency and integrity in the voting process. It leverages modern cryptographic techniques to protect voter privacy and prevent tampering.
 
-[See our presentation ↗️](https://www.canva.com/design/DAGmAXYr0aM/lYysgOLE0z9kdSsaf3eBKQ/view?utm_content=DAGmAXYr0aM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h3586e21761)
+↗️ [See our presentation](https://www.canva.com/design/DAGmAXYr0aM/lYysgOLE0z9kdSsaf3eBKQ/view?utm_content=DAGmAXYr0aM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h3586e21761)  
+📄 [Download the Report](media/report.pdf)
 
 ## Features
 - Secure and anonymous voting.
