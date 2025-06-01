@@ -1,6 +1,6 @@
 # TrueVote / EVote : Digital Voting System
 
-TrueVote is a secure, user-friendly digital voting application, built upon evote system simulation with C++/Qt and cryptographic primitives to modernize and safeguard small-scale elections while making it remote ie location independent. It emphasizes integrity, privacy, and auditability by combining SHA-256 password hashing, file-based data storage, and a simple graphical user interface. Currently avaialble as a e-vote s/m simulation.
+TrueVote is a secure, user-friendly digital voting application, built upon evote system simulation with C++/Qt and cryptographic primitives to modernize and safeguard small-scale elections while making it remote ie location independent. It emphasizes integrity, privacy, and auditability by combining SHA-256 password hashing, file-based data storage, and a simple graphical user interface.
 
 | [![See our Presentation](https://img.shields.io/badge/↗️%20See%20our-Presentation-blue)](https://www.canva.com/design/DAGmAXYr0aM/lYysgOLE0z9kdSsaf3eBKQ/view?utm_content=DAGmAXYr0aM&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h3586e21761) | [![Download the Report](https://img.shields.io/badge/📄%20Download-the%20Report-brightgreen)](media/report.pdf) |
 |:--:|:--:|
