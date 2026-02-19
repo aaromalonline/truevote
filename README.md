@@ -66,6 +66,3 @@ To build and run eVote, ensure the following prerequisites are met:
     ```
 
 4. The new executable will be available in the `build` directory.
-
-## License
-This project is licensed under the MIT License. See the `LICENSE` file for details.
